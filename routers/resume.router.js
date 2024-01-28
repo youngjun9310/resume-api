@@ -28,6 +28,7 @@ router.get('/', async (req, res) => {
             resumeId: true,
             title: true,
             content: true,
+            status: true,
             user: {
                 select: {
                     name: true,
@@ -37,7 +38,7 @@ router.get('/', async (req, res) => {
         },
         orderBy: [
             {
-                [orderKey]: orderValue,
+                [orderKey]: orderValue.toLowerCase(),
             }
         ]
     })
