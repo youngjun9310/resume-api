@@ -38,7 +38,7 @@ router.get('/', async (req, res) => {
         },
         orderBy: [
             {
-                [orderKey]: orderValue.toLowerCase,
+                [orderKey]: orderValue.toLowerCase(),
             }
         ]
     })
@@ -78,6 +78,35 @@ router.get('/:resumeId', async (req, res) => {
     }
 
     return res.json({ data: resume });
+})
+
+router.post('/', jwtValidate, async (req, res) => {
+    const user = res.locals.user;
+    const { title, content } = req.body;
+    if (!title) {
+        return res.status(400).json({
+            success: false,
+            message: '이력서 제목은 필수값 입니다'
+        })
+    }
+
+    if (!content) {
+        return res.status(400).json({
+            success: false,
+            message: '자기소개는 필수값 입니다'
+        })
+    }
+
+    await prisma.resume.create({
+        data: {
+            title,
+            content,
+            status: 'APPLY',
+            userId: user.userId,
+        }
+    })
+
+    return res.status(201).json({});
 })
 
 module.exports = router;
