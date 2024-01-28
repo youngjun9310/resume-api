@@ -24,6 +24,7 @@ model user {
   clientId  String?  @db.VarChar(255)
   email     String?  @db.VarChar(255)
   password  String?  @db.VarChar(255)
+  grade     String   @default("user") @db.VarChar(255)
   name      String   @db.VarChar(255)
   createdAt DateTime @default(now()) @db.DateTime(0)
   resume    resume[]

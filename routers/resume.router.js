@@ -163,14 +163,14 @@ router.patch('/:resumeId', jwtValidate, async (req, res) => {
         })
     }
 
-    if (resume.userId !== user.userId) {
+    if (user.grade === 'user' && resume.userId !== user.userId) {
         return res.status(400).json({
             success: false,
             message: '올바르지 않은 요청입니다.',
         })
     }
 
-    // 내가 작성한 이력서이다.
+    // 내가 작성한 이력서이거나 권한 등급이 admin이다.
     await prisma.resume.update({
         where: {
             resumeId: Number(resumeId),

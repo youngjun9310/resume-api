@@ -8,7 +8,11 @@ const jwtValidate = require('../middleware/jwt-validate.middleware');
 const router = express.Router();
 
 router.post('/sign-up', async (req, res) => {
-    const { email, clientId, password, passwordConfirm, name } = req.body;
+    const { email, clientId, password, passwordConfirm, name, grade } = req.body;
+    if (grade && !['user', 'admin'].includes(grade)) {
+        return res.status(400).json({ success: false, message: '등급이 올바르지 않습니다.' })
+    }
+
     if (!clientId) {
         if (!email) {
             return res.status(400).json({ success: false, message: '이메일은 필수값입니다.' })
@@ -51,6 +55,7 @@ router.post('/sign-up', async (req, res) => {
             data: {
                 clientId,
                 name,
+                grade,
             }
         });
     } else {
@@ -70,6 +75,7 @@ router.post('/sign-up', async (req, res) => {
                 email,
                 password: sha256(password).toString(),
                 name,
+                grade,
             }
         });
     }
