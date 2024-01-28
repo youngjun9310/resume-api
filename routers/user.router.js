@@ -1,6 +1,8 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const jwtwebToken = require('jsonwebtoken');
+
 const router = express.Router();
 
 router.post('/sign-up', async (req, res) => {
@@ -50,6 +52,34 @@ router.post('/sign-up', async (req, res) => {
     return res.status(201).json({
         email,
         name,
+    })
+})
+
+router.post('/sign-in', async (req, res) => {
+    const { email, password } = req.body;
+    if (!email) {
+        return res.status(400).json({ success: false, message: '이메일은 필수값입니다.' })
+    }
+
+    if (!password) {
+        return res.status(400).json({ success: false, message: '비밀번호는 필수값입니다.' })
+    }
+
+    const user = await prisma.user.findFirst({
+        where: {
+            email,
+            password,
+        }
+    })
+
+    if (!user) {
+        return res.status(401).json({ success: false, message: '올바르지 않은 로그인 정보입니다.' })
+    }
+
+    // 로그인 성공
+    const accessToken = jwtwebToken.sign({ userId: user.userId }, 'resume@#', { expiresIn: '12h' })
+    return res.json({
+        accessToken,
     })
 })
 
