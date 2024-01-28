@@ -2,6 +2,7 @@ const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const jwtwebToken = require('jsonwebtoken');
+const jwtValidate = require('../middleware/jwt-validate.middleware');
 
 const router = express.Router();
 
@@ -80,6 +81,15 @@ router.post('/sign-in', async (req, res) => {
     const accessToken = jwtwebToken.sign({ userId: user.userId }, 'resume@#', { expiresIn: '12h' })
     return res.json({
         accessToken,
+    })
+})
+
+router.get('/me', jwtValidate, (req, res) => {
+    const user = res.locals.user;
+
+    return res.json({
+        email: user.email,
+        name: user.name,
     })
 })
 
