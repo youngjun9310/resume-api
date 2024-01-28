@@ -38,12 +38,46 @@ router.get('/', async (req, res) => {
         },
         orderBy: [
             {
-                [orderKey]: orderValue.toLowerCase(),
+                [orderKey]: orderValue.toLowerCase,
             }
         ]
     })
 
     return res.json({ data: resumes });
+})
+
+router.get('/:resumeId', async (req, res) => {
+    const resumeId = req.params.resumeId;
+    if (!resumeId) {
+        return res.status(400).json({
+            success: false,
+            message: 'resumeId는 필수값입니다.'
+        })
+    }
+
+    const resume = await prisma.resume.findFirst({
+        where: {
+            resumeId: Number(resumeId),
+        },
+        select: {
+            resumeId: true,
+            title: true,
+            content: true,
+            status: true,
+            user: {
+                select: {
+                    name: true,
+                }
+            },
+            createdAt: true,
+        },
+    })
+
+    if (!resume) {
+        return res.json({ data: {} });
+    }
+
+    return res.json({ data: resume });
 })
 
 module.exports = router;
