@@ -1,13 +1,10 @@
 const express = require('express')
 const bodyParser = require('body-parser');
-
 const swaggerJsdoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
-
-// const authRouter = require('./routers/auth.router');
-// const userRouter = require('./routers/user.router');
-// const resumeRouter = require('./routers/resume.router');
-const router = require('./routers/router.js')
+const authRouter = require('./routers/auth.router.js')
+const userRouter = require('./routers/user.router.js')
+const resumeRouter = require('./routers/resume.router.js')
 
 const app = express()
 const port = 3000
@@ -15,11 +12,9 @@ const port = 3000
 
 app.use(bodyParser.json());
 
-// app.use('/auth', authRouter);
-// app.use('/users', userRouter);
-// app.use('/resumes', resumeRouter);
-
-app.use('/', router)
+app.use('/token', authRouter)
+app.use('/resumes', userRouter)
+app.use('/users', resumeRouter)
 
 const options = {
     swaggerDefinition: {

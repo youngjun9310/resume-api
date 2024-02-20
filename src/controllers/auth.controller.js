@@ -10,7 +10,7 @@ module.exports = class authController {
         }
         const [newAccessToken, newRefreshToken] = await this.authService.tokenVerify(refreshToken);
 
-        return res.json({
+        return res.status(201).json({
             accessToken: newAccessToken,
             refreshToken: newRefreshToken
         })

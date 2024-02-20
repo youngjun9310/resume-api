@@ -1,36 +1,16 @@
 const express = require('express');
-const jwtwebToken = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const { prisma } = require('../utils/prisma/index.js');
+const { authController } = require('../controllers/auth.controller.js');
+const { authService } = require('../services/auth.service.js');
+const { authRepository } = require('../repositories/auth.repository.js');
+
 const router = express.Router();
 
-router.post('/token', async (req, res) => {
-    const { refreshToken } = req.body;
+const authRepository = new PostsRepository(prisma);
+const authService = new PostsService(authRepository);
+const authController = new authController(authService);
 
-    const token = jwtwebToken.verify(refreshToken, 'resume&%*');
-    if (!token.userId) {
-        return res.status(401).end();
-    }
-
-    const user = await prisma.user.findFirst({
-        where: {
-            userId: token.userId,
-        }
-    })
-
-    if (!user) {
-        return res.status(401).end();
-    }
-
-    // freshToken 유효함 -> accessToken, refreshToken 재발급
-    const newAccessToken = jwtwebToken.sign({ userId: user.userId }, 'resume@#', { expiresIn: '12h' });
-    const newRefreshToken = jwtwebToken.sign({ userId: user.userId }, 'resume&%*', { expiresIn: '7d' });
-
-    return res.json({
-        accessToken: newAccessToken,
-        refreshToken: newRefreshToken,
-    })
-})
+/** Access토큰, Refresh토큰 발급 API **/
+router.post('/', authController.tokenPost);
 
 module.exports = router;
-
