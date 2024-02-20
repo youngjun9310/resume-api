@@ -3,7 +3,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const sha256 = require('crypto-js/sha256');
 const jwtwebToken = require('jsonwebtoken');
-const jwtValidate = require('../middleware/jwt-validate.middleware');
+const jwtValidate = require('../middlewares/jwt-validate.middleware');
 
 const router = express.Router();
 
