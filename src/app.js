@@ -13,8 +13,8 @@ const port = 3000
 app.use(bodyParser.json());
 
 app.use('/token', authRouter)
-app.use('/resumes', userRouter)
-app.use('/users', resumeRouter)
+app.use('/resumes', resumeRouter)
+app.use('/users', userRouter)
 
 const options = {
     swaggerDefinition: {

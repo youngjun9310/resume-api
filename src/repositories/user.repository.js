@@ -5,7 +5,13 @@ module.exports = class userRepositories {
 
     kakaoSignUp = async (clientId, name, grade) => {
         try{
-        const kakaoSignUp = await this.prisma.user.create(clientId, name, grade);
+        const kakaoSignUp = await this.prisma.user.create({
+            data: {
+                clientId, 
+                name, 
+                grade,
+            }
+        });
         return kakaoSignUp;
         }catch(err){
 
@@ -14,7 +20,14 @@ module.exports = class userRepositories {
 
     signUp = async (email, password, name, grade) => {
         try{
-        const signUp = await this.prisma.user.create(email, password, name, grade);
+        const signUp = await this.prisma.user.create({
+            data: {
+                email, 
+                password, 
+                name, 
+                grade,
+            }
+        });
         return signUp;
         }catch(err){
 
